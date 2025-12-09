@@ -66,6 +66,41 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- OWASP Dependency Check - Scans for vulnerable dependencies (A03: Software Supply Chain) -->
+			<!--
+				To use this plugin:
+				1. Get free NVD API key from: https://nvd.nist.gov/developers/request-an-api-key
+				2. Set environment variable: export NVD_API_KEY=your-api-key-here
+				3. Run: mvn dependency-check:check
+
+				Without API key, you may get rate limit errors (403/404).
+				The plugin is configured to read API key from NVD_API_KEY environment variable.
+			-->
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>9.0.9</version>
+				<configuration>
+					<!-- Read API key from environment variable (most secure) -->
+					<nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+					<!-- Delay between NVD API requests in milliseconds (prevents rate limiting) -->
+					<!-- Recommended: 3000-6000ms. Increase if you still get rate limit errors -->
+					<nvdApiDelay>4000</nvdApiDelay>
+					<!-- Don't fail build if check fails (optional) -->
+					<failOnError>false</failOnError>
+					<!-- Format: HTML, JSON, XML, CSV, JUNIT, SARIF -->
+					<formats>
+						<format>HTML</format>
+						<format>JSON</format>
+					</formats>
+					<!-- Output directory for reports -->
+					<outputDirectory>${project.build.directory}/dependency-check-report</outputDirectory>
+					<!-- Cache NVD data locally to reduce API calls -->
+					<dataDirectory>${user.home}/.dependency-check/data</dataDirectory>
+				</configuration>
+				<!-- Removed automatic execution - run manually with: mvn dependency-check:check -->
+				<!-- This prevents build failures if API key is not configured -->
+			</plugin>
 		</plugins>
 	</build>
 
