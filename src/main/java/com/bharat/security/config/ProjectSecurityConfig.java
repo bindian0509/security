@@ -24,6 +24,7 @@ public class ProjectSecurityConfig {
         /*http.authorizeHttpRequests((requests) -> requests.anyRequest().denyAll());*/
         http.authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/account/**", "/balance/**", "/loan/**", "/card/**").authenticated()
+                .requestMatchers("/api/flights/**").permitAll() // Allow flight search endpoints
                 .requestMatchers("/notice", "/contact", "/error").permitAll());
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
