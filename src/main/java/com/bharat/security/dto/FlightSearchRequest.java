@@ -2,7 +2,7 @@ package com.bharat.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 
@@ -11,12 +11,32 @@ import java.time.LocalDate;
  */
 public class FlightSearchRequest {
 
+    /**
+     * Origin airport code - must be exactly 3 uppercase letters (IATA format).
+     * Example: JFK, LAX, LHR
+     *
+     * @Pattern regex explanation:
+     * - ^[A-Z]{3}$ - Starts (^) and ends ($) with exactly 3 uppercase letters [A-Z]
+     * - flags = Pattern.Flag.CASE_INSENSITIVE - Allows lowercase input, converts to uppercase
+     */
     @NotBlank(message = "Origin is required")
-    @Size(min = 3, max = 3, message = "Origin must be a 3-letter airport code")
+    @Pattern(
+        regexp = "^[A-Z]{3}$",
+        flags = Pattern.Flag.CASE_INSENSITIVE,
+        message = "Origin must be a valid 3-letter IATA airport code (e.g., JFK, LAX)"
+    )
     private String origin;
 
+    /**
+     * Destination airport code - must be exactly 3 uppercase letters (IATA format).
+     * Example: JFK, LAX, LHR
+     */
     @NotBlank(message = "Destination is required")
-    @Size(min = 3, max = 3, message = "Destination must be a 3-letter airport code")
+    @Pattern(
+        regexp = "^[A-Z]{3}$",
+        flags = Pattern.Flag.CASE_INSENSITIVE,
+        message = "Destination must be a valid 3-letter IATA airport code (e.g., JFK, LAX)"
+    )
     private String destination;
 
     @NotNull(message = "Departure date is required")
